@@ -363,18 +363,20 @@ func (a *Analysis) getAIResultForSanitizedFailures(texts []string, promptTmpl st
 	}
 
 	// Process template.
+	promptTmpl += " 请用中文输出"
 	prompt := fmt.Sprintf(strings.TrimSpace(promptTmpl), a.Language, inputKey)
 	fmt.Println("promptTmpl", promptTmpl)
 	fmt.Println("prompt", prompt)
-	response, err := a.AIClient.GetCompletion(a.Context, prompt)
-	if err != nil {
-		return "", err
-	}
-
-	if err = a.Cache.Store(cacheKey, base64.StdEncoding.EncodeToString([]byte(response))); err != nil {
-		color.Red("error storing value to cache; value won't be cached: %v", err)
-	}
-	return response, nil
+	//response, err := a.AIClient.GetCompletion(a.Context, prompt)
+	//if err != nil {
+	//	return "", err
+	//}
+	//
+	//if err = a.Cache.Store(cacheKey, base64.StdEncoding.EncodeToString([]byte(response))); err != nil {
+	//	color.Red("error storing value to cache; value won't be cached: %v", err)
+	//}
+	//return response, nil
+	return "", nil
 }
 
 func (a *Analysis) Close() {
