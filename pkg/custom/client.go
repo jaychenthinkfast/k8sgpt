@@ -12,17 +12,18 @@ import (
 
 type Client struct {
 	c              *grpc.ClientConn
-	analyzerClient rpc.AnalyzerServiceClient
+	analyzerClient rpc.CustomAnalyzerServiceClient
 }
 
 func NewClient(c Connection) (*Client, error) {
 
+	//nolint:staticcheck // Ignoring SA1019 for compatibility reasons
 	conn, err := grpc.Dial(fmt.Sprintf("%s:%s", c.Url, c.Port), grpc.WithTransportCredentials(insecure.NewCredentials()))
 
 	if err != nil {
 		return nil, err
 	}
-	client := rpc.NewAnalyzerServiceClient(conn)
+	client := rpc.NewCustomAnalyzerServiceClient(conn)
 	return &Client{
 		c:              conn,
 		analyzerClient: client,
@@ -31,7 +32,7 @@ func NewClient(c Connection) (*Client, error) {
 
 func (cli *Client) Run() (common.Result, error) {
 	var result common.Result
-	req := &schemav1.AnalyzerRunRequest{}
+	req := &schemav1.RunRequest{}
 	res, err := cli.analyzerClient.Run(context.Background(), req)
 	if err != nil {
 		return result, err
